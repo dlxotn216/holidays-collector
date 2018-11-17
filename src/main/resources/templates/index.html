@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" th:href="@{/css/styles.css}"/>
+
+	<title>Holiday collector</title>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="notice">
+	<p><a href="https://www.data.go.kr/subMain.jsp">공공데이터 포털</a>의 공휴일 정보 조회 API 사용</p>
+	<p>인증키에 대해 반드시 연장 신청을 통해 사용해야함(인증키는 유효기간이 연장일로부터 당일)</p>
+	<p class="alert">API를 반복호출할 경우 일시적으로 API를 호출하는 IP가 차단되어 API 제공처에서 500에러를 반환할 수 있음(방지하기 위해 3초 지연처리)</p>
+</div>
+
+<div class="form">
+	<div class="item-row">
+		<label>NationCode</label>
+		<select id="nationCode">
+			<option th:each="nationCode : ${nationCodes}" th:value="${nationCode.code}" th:text="${nationCode.code}"></option>
+		</select>
+	</div>
+	<div class="item-row">
+		<label>URL</label>
+		<input id="url" value="http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo" />
+	</div>
+	<div class="item-row">
+		<label>API-KEY</label>
+		<input id="apiKey" value="k23%2FdF5h70%2B5lX7JQ5%2BLIX%2BT%2BcaNiCvFk8wkGsa9cAHa0BzZ5X4IXZgROlzBxDdmIl0v%2Br4chZH3BeizRnSNtQ%3D%3D" />
+	</div>
+	<div class="item-row">
+		<label>Content type</label>
+		<select id="contentType">
+			<option th:each="contentType : ${mediaTypes}" th:value="${contentType}" th:text="${contentType}"></option>
+		</select>
+	</div>
+	<div class="item-row">
+		<label>Start at</label>
+		<input type="date" id="startAt"/>
+	</div>
+	<div class="item-row">
+		<label>End at</label>
+		<input type="date" id="endAt"/>
+	</div>
+	<div class="item-row">
+		<button id="btn-call-api" type="button">Call API</button>
+		<p id="able-to-call-api">Now status enabled</p>
+		<p id="unable-to-call-api">Status disabled</p>
+	</div>
+	<div>
+		<textarea rows="50" cols="300" id="result" readonly></textarea>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		var currentYear = new Date().getFullYear();
+
+		$('#startAt').val(currentYear + '-' + '01' + '-' + '01');
+		$('#endAt').val(currentYear + '-' + '12' + '-' + '31');
+
+		var apiCallProceed = false;
+		toggleCallApiButton(apiCallProceed);
+
+		$('#btn-call-api').on('click', function () {
+			if (apiCallProceed) {
+				return;
+			}
+
+			apiCallProceed = true;
+			toggleCallApiButton(apiCallProceed);
+
+			$.ajax({
+				type: 'GET',
+				url: '/holidays?url=' + $('#url').val() 
+										+ '&nationCode=' + $('#nationCode').val()
+										+ '&apiKey=' + $('#apiKey').val()
+										+ '&contentType=' + $('#contentType').val()
+										+ '&startAt=' + $('#startAt').val() 
+										+ '&endAt=' + $('#endAt').val(),
+				dataType: 'text',
+				success: function (response) {
+					$('#result').val(response);
+					loging('onSuccess', response);
+				},
+				error: function (response) {
+					loging('onError', response);
+				},
+				complete: function (response) {
+					setTimeout(function () {
+						apiCallProceed = false;
+						toggleCallApiButton(apiCallProceed);
+					}, 3000);
+					loging('onComplete', response);
+				}
+			});
+		});
+
+		function loging(status, response) {
+			console.log(status);
+			console.log(response);
+		}
+
+		function toggleCallApiButton(apiCallProceed) {
+			var $able = $('#able-to-call-api');
+			var $unable = $('#unable-to-call-api');
+			
+			if (apiCallProceed) {
+				$('#result').val('');
+				$able.hide();
+				$unable.show();
+			} else {
+				$able.show();
+				$unable.hide();
+			}
+		}
+	});
+</script>
+</body>
+</html>
