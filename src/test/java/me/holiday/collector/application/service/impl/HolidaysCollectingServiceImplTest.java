@@ -77,7 +77,15 @@ public class HolidaysCollectingServiceImplTest {
 					LocalDate startAt = LocalDate.of(year, 1, 1);
 					LocalDate endAt = LocalDate.of(year, 12, 1);
 					String url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
-					String query = holidaysCollectingService.getCollectedHolidaysMergeQuery(new HolidayCollectingRequest(url, "k23%2FdF5h70%2B5lX7JQ5%2BLIX%2BT%2BcaNiCvFk8wkGsa9cAHa0BzZ5X4IXZgROlzBxDdmIl0v%2Br4chZH3BeizRnSNtQ%3D%3D", MediaType.APPLICATION_JSON, "KOR", startAt.toString(), endAt.toString())).block();
+					String query = holidaysCollectingService.getCollectedHolidaysMergeQuery(HolidayCollectingRequest.builder()
+							.url("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo")
+							.apiKey("k23%2FdF5h70%2B5lX7JQ5%2BLIX%2BT%2BcaNiCvFk8wkGsa9cAHa0BzZ5X4IXZgROlzBxDdmIl0v%2Br4chZH3BeizRnSNtQ%3D%3D")
+							.contentType(MediaType.APPLICATION_JSON)
+							.nationCode("KOR")
+							.startAt(startAt.toString())
+							.endAt(endAt.toString())
+							.build()
+					).block();
 
 //					System.out.println("==========result[" + year + "]==========");
 					System.out.println(query);
