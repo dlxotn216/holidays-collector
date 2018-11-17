@@ -79,12 +79,15 @@
 
 			$.ajax({
 				type: 'GET',
-				url: '/holidays?url=' + $('#url').val() 
-										+ '&nationCode=' + $('#nationCode').val()
-										+ '&apiKey=' + $('#apiKey').val()
-										+ '&contentType=' + $('#contentType').val()
-										+ '&startAt=' + $('#startAt').val() 
-										+ '&endAt=' + $('#endAt').val(),
+				url: '/holidays',
+				data :{
+					url: $('#url').val(),
+					nationCode: $('#nationCode').val(),
+					apiKey: $('#apiKey').val(),
+					contentType: $('#contentType').val(),
+					startAt: $('#startAt').val(),
+					endAt: $('#endAt').val()
+				},
 				dataType: 'text',
 				success: function (response) {
 					$('#result').val(response);
