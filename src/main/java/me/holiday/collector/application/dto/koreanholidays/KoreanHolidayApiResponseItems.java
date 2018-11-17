@@ -1,4 +1,4 @@
-package me.holiday.collector.application.dto;
+package me.holiday.collector.application.dto.koreanholidays;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,10 +16,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HolidayApiResponseItems {
-	private List<HolidayApiResponseItem> item;
+public class KoreanHolidayApiResponseItems {
+	private List<KoreanHolidayApiResponseItem> item;
 	
-	public List<HolidayApiResponseItem> getItems() {
+	public List<KoreanHolidayApiResponseItem> getItems() {
 		return item == null 
 				? Collections.emptyList()
 				: item;

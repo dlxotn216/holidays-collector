@@ -1,4 +1,4 @@
-package me.holiday.collector.application.dto;
+package me.holiday.collector.application.dto.koreanholidays;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,10 +45,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HolidayApiResponse {
+public class KoreanHolidayApiResponse {
 	private HolidayApiResponseInfo response;
 	
-	public HolidayApiResponseItems getItems() {
+	public KoreanHolidayApiResponseItems getItems() {
 		return response.getBody().getItems();
 	}
 }
@@ -73,14 +73,14 @@ class HolidayApiResponseHeader {
 @Setter
 @NoArgsConstructor
 class HolidayApiResponseBody {
-	private HolidayApiResponseItems items;
+	private KoreanHolidayApiResponseItems items;
 	private int numOfRows;
 	private int pageNo;
 	private int totalCount;
 	
-	public HolidayApiResponseItems getItems() {
+	public KoreanHolidayApiResponseItems getItems() {
 		return items == null
-				? new HolidayApiResponseItems()
+				? new KoreanHolidayApiResponseItems()
 				: items;
 	}
 }

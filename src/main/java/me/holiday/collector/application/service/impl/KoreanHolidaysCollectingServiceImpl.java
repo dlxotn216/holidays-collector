@@ -1,12 +1,11 @@
 package me.holiday.collector.application.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.holiday.collector.application.dto.HolidayApiResponse;
+import me.holiday.collector.application.dto.koreanholidays.KoreanHolidayApiResponse;
 import me.holiday.collector.application.dto.HolidayCollectingRequest;
 import me.holiday.collector.application.service.HolidaysCollectingService;
 import me.holiday.collector.domain.Holiday;
 import me.holiday.collector.domain.NationCode;
-import me.holiday.config.ApplicationConfiguration;
 import me.holiday.utils.DateRangeUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -75,12 +74,12 @@ public class KoreanHolidaysCollectingServiceImpl implements HolidaysCollectingSe
 	private Flux<Holiday> getHolidayFlux(HolidayCollectingRequest request) {
 		return sendRequests(request.getUrl(), request.getApiKey(), request.getContentType(), request.getStartAt(), request.getEndAt())
 				.flatMap(response -> Flux.fromIterable(response.getItems().getItems()))
-//				.filter(HolidayApiResponseItem::isHoliday)			//제헌절과 같이 특일이나 공휴일이 아닌 경우를 필터링하기 위한 필터 
+//				.filter(KoreanHolidayApiResponseItem::isHoliday)			//제헌절과 같이 특일이나 공휴일이 아닌 경우를 필터링하기 위한 필터 
 				.map(holidayApiResponseItem -> new Holiday(request.getNationCode(), holidayApiResponseItem.getDateName(), holidayApiResponseItem.getLocalDate(), holidayApiResponseItem.isHoliday()))
 				.distinct();
 	}
 	
-	private Flux<HolidayApiResponse> sendRequests(String url, String apiKey, MediaType mediaType, LocalDate startAt, LocalDate endAt) {
+	private Flux<KoreanHolidayApiResponse> sendRequests(String url, String apiKey, MediaType mediaType, LocalDate startAt, LocalDate endAt) {
 		return Flux.fromIterable(DateRangeUtils.getDateRangeByMonthInterval(startAt, endAt))
 				.flatMap(date -> sendRequest(url, apiKey, mediaType, date))
 //				.log()
@@ -88,7 +87,7 @@ public class KoreanHolidaysCollectingServiceImpl implements HolidaysCollectingSe
 		
 	}
 	
-	private Flux<HolidayApiResponse> sendRequest(String url, String apiKey, MediaType mediaType, LocalDate date) {
+	private Flux<KoreanHolidayApiResponse> sendRequest(String url, String apiKey, MediaType mediaType, LocalDate date) {
 		return builder
 				.uriBuilderFactory(this.factory)
 				.baseUrl(url)
@@ -104,7 +103,7 @@ public class KoreanHolidaysCollectingServiceImpl implements HolidaysCollectingSe
 						.build())
 				.accept(mediaType)
 				.retrieve()
-				.bodyToFlux(HolidayApiResponse.class);
+				.bodyToFlux(KoreanHolidayApiResponse.class);
 	}
 	
 	private ExchangeFilterFunction logRequest() {

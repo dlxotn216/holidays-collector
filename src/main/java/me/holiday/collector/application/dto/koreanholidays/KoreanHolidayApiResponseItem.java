@@ -1,4 +1,4 @@
-package me.holiday.collector.application.dto;
+package me.holiday.collector.application.dto.koreanholidays;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HolidayApiResponseItem {
+public class KoreanHolidayApiResponseItem {
 	private String dateKind;
 	private String dateName;
 	private String locdate;
