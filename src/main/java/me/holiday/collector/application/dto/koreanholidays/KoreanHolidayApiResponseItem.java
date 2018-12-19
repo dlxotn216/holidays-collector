@@ -20,6 +20,7 @@ public class KoreanHolidayApiResponseItem {
 	private String dateKind;
 	private String dateName;
 	private String locdate;
+	private String remarks;
 	private String isHoliday;
 	private Integer seq;
 	
